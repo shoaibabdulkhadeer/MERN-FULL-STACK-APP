@@ -1,3 +1,6 @@
+require('dotenv').config()
+
+
 const express = require ('express')
 
 const app = express()
@@ -8,8 +11,8 @@ const cors = require('cors')
 app.use(express.json())
 app.use(cors());
 
-mongoose.connect('xyz', {
-    dbName:"xyz",
+mongoose.connect(process.env.KEY, {
+    dbName:"merntutorial",
 })
 .then(() =>  console.log("database connected"))
 .catch((e) => console.log(e))
@@ -19,9 +22,15 @@ app.get('/',(req,res)=> {
 })
   
 app.post("/addUsers", async (req,res)=> {
-    const newUser = await UserModel.create({name:"zen",age:"zen2",username:"qqwe"})
-    await newUser.save()
-     res.send("Submitted")
+ 
+    const user = req.body;
+    const newUser = new UserModel(user);
+    await newUser.save();
+
+    res.json(user)
+    // const newUser = await UserModel.create({name:"SIddu",age:"25",username:"sidduDon"})
+    // await newUser.save()
+    //  res.send("Submitted")
 })
   
 app.get("/getUsers", async (req,res)=> {
